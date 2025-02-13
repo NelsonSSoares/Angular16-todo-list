@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { HeaderComponent } from '../header/header.component';
 
 
 @Component({
@@ -19,6 +21,7 @@ import { MatInputModule } from '@angular/material/input';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    MatDialogModule
   ],
   templateUrl: './todo-form.component.html',
   styleUrls: []
@@ -27,8 +30,11 @@ export class TodoFormComponent {
 
   // nova forma de injetar o serviço, sem constructor
   private todoSignalsService = inject(TodoSignalsService);
+  //Referencia de quem abriu a modal dentro do Generics <>
+  private dialogRefService = inject(MatDialogRef<HeaderComponent>);
 
   public allTodos = this.todoSignalsService.todoState();
+
   public todosForm = new FormGroup({
     title: new FormControl('', [Validators.required, Validators.minLength(3)]),
     description: new FormControl('', [Validators.required, Validators.minLength(5)]),
@@ -42,6 +48,11 @@ export class TodoFormComponent {
       const done = false;
 
       this.todoSignalsService.updateTodos({id, title, description, done});
+
+      this.dialogRefService.close();
     }
+  }
+  public handleCloseModal(): void{
+    this.dialogRefService.close();
   }
 }
