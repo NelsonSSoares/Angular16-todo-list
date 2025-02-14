@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { TodoCardComponent } from './components/todo-card/todo-card.component';
 import { SchoolData, SchoolService } from './services/school.service';
-import { Observable, Subject, takeUntil, zip } from 'rxjs';
+import { from, map, Observable, of, Subject, takeUntil, zip } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -23,11 +23,26 @@ export class AppComponent implements OnInit, OnDestroy{
   public students: Array<SchoolData> = [];
   public teachers: Array<SchoolData> = [];
   // zip é um operador que combina vários observables em um único observable
+   //$ representa um observable
   public zipSchoolResponse$= zip(
     this.getStudentData(),
     this.getTeacherData()
   );
-  //$ representa um observable
+
+  private ages = of(20,30,40,50,60,70);
+  private peopleDatas = from([{
+    name: "João",
+    age: 20,
+    profession: "Developer"
+  }, {
+    name: "Maria",
+    age: 30,
+    profession: "Designer"
+  }, {
+    name: "José",
+    age: 40,
+    profession: "Manager"
+  }]);
 
   constructor(
       //chamar os nossos metodos de serviço
@@ -36,12 +51,33 @@ export class AppComponent implements OnInit, OnDestroy{
 
 
   ngOnInit(): void {
-    this.getSchoolData();
+    //this.getSchoolData();
+    //this.getMultipleAges();
+    this.getPeopleProfessions();
+  }
+
+  public getPeopleProfessions(): void {
+    this.peopleDatas.pipe(
+      map((peopleData) => peopleData.profession)
+    ).subscribe({
+      next: (response) => console.log("PROFISSÃO: "+ response)
+    });
+  }
+
+  public getMultipleAges(): void {
+    this.ages.pipe(
+      map((age)=>{
+        return age * age;
+      })
+    ).subscribe({
+      next: (age) => {
+        console.log("IDADE MULTIPLACADA: "+age);
+      }
+    });
   }
 
   // os operadores of e zip são usados para simular uma chamada assíncrona
   // esperando vários observables serem resolvidos, para então retornar o resultado
-
   public getSchoolData(): void {
     this.zipSchoolResponse$.
     pipe(takeUntil(this.destroy$)).
