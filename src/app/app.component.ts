@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { TodoCardComponent } from './components/todo-card/todo-card.component';
 import { SchoolData, SchoolService } from './services/school.service';
-import { from, map, Observable, of, Subject, takeUntil, zip } from 'rxjs';
+import { filter, from, map, Observable, of, Subject, takeUntil, zip } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -42,7 +42,23 @@ export class AppComponent implements OnInit, OnDestroy{
     name: "José",
     age: 40,
     profession: "Manager"
-  }]);
+  },
+  {
+    name: "Pedro",
+    age: 50,
+    profession: "Developer"
+  },
+  {
+    name: "Ana",
+    age: 60,
+    profession: "QA"
+  },
+  {
+    name: "Carlos",
+    age: 70,
+    profession: "CEO"
+  }
+]);
 
   constructor(
       //chamar os nossos metodos de serviço
@@ -76,6 +92,15 @@ export class AppComponent implements OnInit, OnDestroy{
     });
   }
 
+  getSoftwareDevelopersNames(): void {
+    this.peopleDatas.pipe(
+      filter((people)=> people.profession === "Developer"),
+      map((people)=> people.name)
+    ).subscribe({
+      next: (response) => console.log("DEVELOPERS NAME: "+ response)
+    });
+  }
+
   // os operadores of e zip são usados para simular uma chamada assíncrona
   // esperando vários observables serem resolvidos, para então retornar o resultado
   public getSchoolData(): void {
@@ -96,6 +121,8 @@ export class AppComponent implements OnInit, OnDestroy{
   private getTeacherData(): Observable<Array<SchoolData>> {
     return this.schoolService.getTeachers();
   }
+
+
 
   ngOnDestroy(): void {
     this.destroy$.next();
