@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { TodoCardComponent } from './components/todo-card/todo-card.component';
@@ -17,6 +17,10 @@ import { filter, from, map, Observable, of, Subject, switchMap, takeUntil, zip }
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
+
+  @Input() projectName!: string;
+  @Output() outputEvent = new EventEmitter<string>();
+
 
   private destroy$ = new Subject<void>();
   public title = 'todo-list-16';
@@ -148,5 +152,9 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  public handleEmitEvent(): void {
+    this.outputEvent.emit(this.projectName);
   }
 }
