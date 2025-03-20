@@ -25,6 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   private destroy$ = new Subject<void>();
+  public renderTestMessage = false;
   public todoSignal!: WritableSignal<Array<Todo>>;
   public title = 'todo-list-16';
   public students: Array<SchoolData> = [];

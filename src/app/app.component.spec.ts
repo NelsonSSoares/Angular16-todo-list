@@ -4,6 +4,8 @@ import { AppComponent } from './app.component';
 import { first } from 'rxjs';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Todo } from './models/model/todo.model';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 
 describe('AppComponent', () => {
@@ -68,5 +70,22 @@ describe('AppComponent', () => {
     expect(spy).toHaveBeenCalledWith(newTodo);
     expect(component.todoSignal()).toEqual([newTodo]);
   });
+
+  //Teste de elementos do DOM
+  it("should not render paragraph in the DOM", () => {
+    const componentDebugElement: DebugElement = fixture.debugElement;
+    const element: HTMLElement = componentDebugElement.nativeElement;
+    const paragraph = element.querySelector("p");
+    expect(paragraph).toBeNull();
+  });
+
+  it("should render paragraph in the DOM", () => {
+    component.renderTestMessage = true;
+    fixture.detectChanges();
+    const componentDebugElement: DebugElement = fixture.debugElement;
+    const paragraphDebugElement = componentDebugElement.query(By.css("p"));
+    const paragraph: HTMLElement = paragraphDebugElement.nativeElement;
+    expect(paragraph.textContent).toEqual("Testing your Angular Application");
+  })
 
 });
