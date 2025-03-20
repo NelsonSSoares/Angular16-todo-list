@@ -25,6 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   private destroy$ = new Subject<void>();
+  public isDoned = false;
   public renderTestMessage = false;
   public todoSignal!: WritableSignal<Array<Todo>>;
   public title = 'todo-list-16';
@@ -168,5 +169,11 @@ export class AppComponent implements OnInit, OnDestroy {
       this.todoSignalsService.updateTodos(todo);
       this.todoSignal = this.todoSignalsService.todoState;
     }
+  }
+
+  public handleCheckDone(): void {
+    setTimeout(() => {
+      this.isDoned = true;
+    }, 2000);
   }
 }
