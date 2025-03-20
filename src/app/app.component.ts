@@ -1,9 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { TodoSignalsService } from './services/todo-signals.service';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { TodoCardComponent } from './components/todo-card/todo-card.component';
 import { SchoolData, SchoolService } from './services/school.service';
 import { filter, from, map, Observable, of, Subject, switchMap, takeUntil, zip } from 'rxjs';
+import { Todo } from './models/model/todo.model';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   private destroy$ = new Subject<void>();
+  public todoSignal!: WritableSignal<Array<Todo>>;
   public title = 'todo-list-16';
   public students: Array<SchoolData> = [];
   public teachers: Array<SchoolData> = [];
@@ -68,7 +71,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     //chamar os nossos metodos de serviço
-    private schoolService: SchoolService
+    private schoolService: SchoolService,
+    private todoSignalsService: TodoSignalsService
   ) { }
 
 
@@ -156,5 +160,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public handleEmitEvent(): void {
     this.outputEvent.emit(this.projectName);
+  }
+
+  public handleCreateTodo(todo: Todo): void {
+    if(todo){
+      this.todoSignalsService.updateTodos(todo);
+      this.todoSignal = this.todoSignalsService.todoState;
+    }
   }
 }
