@@ -7,6 +7,8 @@ import {  MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TodoKeyLocalStorage } from 'src/app/models/enum/todoKeyLocalStorage';
 import { Todo } from 'src/app/models/model/todo.model';
+import { CustomUpperCasePipe } from 'src/app/shared/pipes/customUpperCase.pipe';
+
 
 @Component({
   selector: 'app-todo-card',
@@ -20,6 +22,7 @@ import { Todo } from 'src/app/models/model/todo.model';
     MatButtonModule,
     MatIconModule,
     MatTabsModule,
+    CustomUpperCasePipe
     ],
   templateUrl: './todo-card.component.html',
   styleUrls: []
